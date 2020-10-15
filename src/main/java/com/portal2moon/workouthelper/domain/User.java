@@ -1,22 +1,27 @@
 package com.portal2moon.workouthelper.domain;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.ToString;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 @RequiredArgsConstructor
 @Getter
 @ToString
 @EqualsAndHashCode
-@Builder
-public final class User {
-    private final String name;
-    private final double height;
-    private final double weight;
-    private final double bmi;
+@Entity
+public class User {
+    @Id
+    @GeneratedValue
+    private final Long userId;
+    private final String alias;
 
-    public User(){
-        name = null;
-        height = 0;
-        weight = 0;
-        bmi = 0;
+    public User() {
+        userId = null;
+        alias = null;
     }
 }
