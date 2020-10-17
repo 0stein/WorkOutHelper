@@ -5,6 +5,7 @@ import com.portal2moon.workouthelper.domain.WorkOutRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.util.List;
 
 @Service
@@ -18,6 +19,12 @@ public class WorkOutLogServiceImpl implements WorkOutLogService{
     @Override
     public List<WorkOutLog> getWorkOutLogs(String alias) {
         return workOutRepository.findAllByUser_Alias(alias);
+    }
+
+    @Override
+    public List<WorkOutLog> getWorkOutLogsWithDate(String alias, String date) {
+        Date sqlDate = Date.valueOf(date);
+        return workOutRepository.findAllByUser_AliasAndDate(alias, sqlDate);
     }
 
     @Override

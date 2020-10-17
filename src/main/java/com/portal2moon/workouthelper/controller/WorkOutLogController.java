@@ -12,7 +12,7 @@ import java.util.List;
 @RequestMapping("/workout")
 public final class WorkOutLogController {
 
-    WorkOutLogService workOutLogService;
+    private final WorkOutLogService workOutLogService;
 
     @Autowired
     public WorkOutLogController(WorkOutLogService workOutLogService) {
@@ -27,5 +27,10 @@ public final class WorkOutLogController {
     @GetMapping("/{alias}")
     List<WorkOutLog> getWorkOutLogs(@PathVariable("alias") String alias){
         return workOutLogService.getWorkOutLogs(alias);
+    }
+
+    @GetMapping("/{alias}/{date}")
+    List<WorkOutLog> getWorkLogsOfDay(@PathVariable("alias") String alias, @PathVariable("date") String date){
+        return workOutLogService.getWorkOutLogsWithDate(alias, date);
     }
 }

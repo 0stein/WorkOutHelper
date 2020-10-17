@@ -7,4 +7,5 @@ import java.util.List;
 public interface WorkOutLogService {
     WorkOutLog checkVolumeAndSave(WorkOutLog workLog);
     List<WorkOutLog> getWorkOutLogs(String alias);
+    List<WorkOutLog> getWorkOutLogsWithDate(String alias, String date);
 }
