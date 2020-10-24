@@ -1,18 +1,23 @@
 package com.portal2moon.workouthelper.service;
 
-import com.portal2moon.workouthelper.domain.WorkOutLog;
-import com.portal2moon.workouthelper.domain.WorkOutRepository;
+import com.portal2moon.workouthelper.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class WorkOutLogServiceImpl implements WorkOutLogService{
     WorkOutRepository workOutRepository;
+    UserRepository userRepository;
     @Autowired
-    public WorkOutLogServiceImpl(WorkOutRepository workOutRepository) {
+    public WorkOutLogServiceImpl(WorkOutRepository workOutRepository, UserRepository userRepository) {
+        this.userRepository = userRepository;
         this.workOutRepository = workOutRepository;
     }
 
@@ -28,10 +33,17 @@ public class WorkOutLogServiceImpl implements WorkOutLogService{
     }
 
     @Override
+    public List<Map<String, Double>> getVolumes(String anyString) {
+        return null;
+    }
+
+    @Override
     public WorkOutLog checkVolumeAndSave(WorkOutLog workLog) {
+        Optional<User> userFromRepository = userRepository.findByAlias(workLog.getUser().getAlias());
         double volume = workLog.getWeight() * workLog.getReps() * workLog.getSet();
         WorkOutLog copyWorkLog = WorkOutLog.builder()
-                .user(workLog.getUser()).workout(workLog.getWorkout()).weight(workLog.getWeight())
+                .user(userFromRepository.orElse(workLog.getUser()))
+                .workout(workLog.getWorkout()).weight(workLog.getWeight())
                 .reps(workLog.getReps()).set(workLog.getSet()).volume(volume)
                 .build();
         workOutRepository.save(copyWorkLog);

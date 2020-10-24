@@ -4,15 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.portal2moon.workouthelper.domain.User;
 import com.portal2moon.workouthelper.domain.WorkOut;
 import com.portal2moon.workouthelper.domain.WorkOutLog;
-import com.portal2moon.workouthelper.domain.WorkOutRepository;
 import com.portal2moon.workouthelper.service.WorkOutLogService;
-import com.portal2moon.workouthelper.service.WorkOutLogServiceImpl;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -26,12 +21,11 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
@@ -49,13 +43,13 @@ class WorkOutLogControllerTest {
         return WorkOutLog.builder()
                 .workoutId(null)
                 .user(new User(null, "susan"))
-                .workout(WorkOut.BABEL_ROW)
+                .workout(WorkOut.BARBELL_ROW)
                 .weight(50).reps(10).set(5)
                 .build();
     }
 
     @Test
-    public void test() throws Exception {
+    public void postSingleWorkLog() throws Exception {
         mvc.perform(post("/workout").contentType(MediaType.APPLICATION_JSON).content("{\n" +
                 "    \"workoutId\": null,\n" +
                 "    \"user\": {\n" +
@@ -73,7 +67,7 @@ class WorkOutLogControllerTest {
     }
 
     @Test
-    public void Test() throws Exception {
+    public void getWorkLogsOfDay() throws Exception {
         List<WorkOutLog> workOutLogList = Collections.singletonList(getWorkLogForTest());
         //bdd assumption
         given(workOutLogService.getWorkOutLogsWithDate(anyString(), anyString())).willReturn(workOutLogList);
@@ -83,6 +77,14 @@ class WorkOutLogControllerTest {
         //validate
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
         Mockito.verify(workOutLogService).getWorkOutLogsWithDate("susan", "2020-10-17");
-        assertThat(response.getContentAsString()).isEqualTo(objectMapper.writeValueAsString(workOutLogList));
+//        assertThat(response.getContentAsString()).isEqualTo(objectMapper.writeValueAsString(workOutLogList));
+    }
+
+    @Test
+    public void getVolumesWithDate() throws Exception {
+        MockHttpServletResponse response = mvc.perform(get("/workout/statistics/susan"))
+                .andReturn().getResponse();
+        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
+        verify(workOutLogService).getVolumes("susan");
     }
 }

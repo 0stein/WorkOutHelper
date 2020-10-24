@@ -30,7 +30,7 @@ public final class WorkOutLog {
     private final double weight;
     private final int reps;
     private final int set;
-    private final double volume;
+    private final Double volume;
 
     public WorkOutLog(){
         workoutId = null;
@@ -38,7 +38,7 @@ public final class WorkOutLog {
         workout = null;
         weight = 0;
         reps = 0;
-        volume = 0;
+        volume = null;
         set = 0;
     }
 }
