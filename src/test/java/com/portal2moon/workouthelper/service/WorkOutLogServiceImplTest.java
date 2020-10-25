@@ -6,19 +6,24 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Arrays;
+import javax.persistence.EntityManager;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
 
 class WorkOutLogServiceImplTest {
-    @Mock
+    @Spy
     WorkOutRepository workOutRepository;
     @Mock
     UserRepository userRepository;
     WorkOutLogService workOutLogService;
+
+    @Autowired
+    EntityManager entityManager;
 
     @BeforeEach
     public void setUp(){
@@ -41,4 +46,11 @@ class WorkOutLogServiceImplTest {
         Mockito.verify(workOutRepository).save(copyLog);
         assertThat(copyLog.getVolume()).isEqualTo(2500);
     }
+
+//    @Test
+//    public void checkProjection(){
+//        workOutLogService.checkVolumeAndSave(getWorkLogForTest());
+//        List<DateAndVolumeProjection> DAndV = workOutLogService.getVolumes("susan");
+//        assertThat(DAndV.toString()).isEqualTo(anyString());
+//    }
 }

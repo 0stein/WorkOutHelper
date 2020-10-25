@@ -1,6 +1,6 @@
 package com.portal2moon.workouthelper.controller;
 
-import com.portal2moon.workouthelper.domain.WorkOut;
+import com.portal2moon.workouthelper.domain.DateAndVolumeProjection;
 import com.portal2moon.workouthelper.domain.WorkOutLog;
 import com.portal2moon.workouthelper.service.WorkOutLogService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/workout")
@@ -37,7 +36,7 @@ public final class WorkOutLogController {
     }
 
     @GetMapping("/statistics/{alias}")
-    List<Map<String, Double>> getVolumeStatistics(@PathVariable("alias") String alias){
+    List<DateAndVolumeProjection> getVolumeStatistics(@PathVariable("alias") String alias){
         return workOutLogService.getVolumes(alias);
     }
 

@@ -84,7 +84,10 @@ class WorkOutLogControllerTest {
     public void getVolumesWithDate() throws Exception {
         MockHttpServletResponse response = mvc.perform(get("/workout/statistics/susan"))
                 .andReturn().getResponse();
+//        given(workOutLogService.getVolumes(anyString())).willReturn();
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
         verify(workOutLogService).getVolumes("susan");
+
+
     }
 }

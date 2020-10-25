@@ -5,11 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class WorkOutLogServiceImpl implements WorkOutLogService{
@@ -33,8 +30,8 @@ public class WorkOutLogServiceImpl implements WorkOutLogService{
     }
 
     @Override
-    public List<Map<String, Double>> getVolumes(String anyString) {
-        return null;
+    public List<DateAndVolumeProjection> getVolumes(String alias) {
+        return workOutRepository.getVolumeWithDateByAlias(alias);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.portal2moon.workouthelper.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
@@ -25,6 +26,7 @@ public final class WorkOutLog {
     @Cascade(CascadeType.PERSIST)
     private final User user;
 
+    @JsonFormat(pattern="yyyy-MM-dd")
     private final Date date = new Date(System.currentTimeMillis());
     private final WorkOut workout;
     private final double weight;
