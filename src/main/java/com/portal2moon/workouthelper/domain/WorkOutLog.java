@@ -15,32 +15,26 @@ import java.sql.Date;
 @Getter
 @ToString
 @EqualsAndHashCode
-@Builder
 @Entity
+@Builder
 public final class WorkOutLog {
+
     @Id
     @GeneratedValue
-    private final Long workoutId;
+    private final Long logId;
 
-    @ManyToOne
-    @Cascade(CascadeType.PERSIST)
-    private final User user;
-
-    @JsonFormat(pattern="yyyy-MM-dd")
-    private final Date date = new Date(System.currentTimeMillis());
     private final WorkOut workout;
     private final double weight;
     private final int reps;
-    private final int set;
+    private final int sets;
     private final Double volume;
 
     public WorkOutLog(){
-        workoutId = null;
-        user = null;
+        logId = null;
         workout = null;
         weight = 0;
         reps = 0;
         volume = null;
-        set = 0;
+        sets = 0;
     }
 }

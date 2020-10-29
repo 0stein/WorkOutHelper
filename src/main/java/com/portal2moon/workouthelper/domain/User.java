@@ -1,9 +1,6 @@
 package com.portal2moon.workouthelper.domain;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,6 +11,7 @@ import javax.persistence.Id;
 @ToString
 @EqualsAndHashCode
 @Entity
+@Builder
 public class User {
     @Id
     @GeneratedValue

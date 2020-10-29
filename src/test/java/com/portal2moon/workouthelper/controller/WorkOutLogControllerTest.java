@@ -1,13 +1,13 @@
 package com.portal2moon.workouthelper.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.portal2moon.workouthelper.domain.DailyWorkOutLog;
 import com.portal2moon.workouthelper.domain.User;
 import com.portal2moon.workouthelper.domain.WorkOut;
 import com.portal2moon.workouthelper.domain.WorkOutLog;
-import com.portal2moon.workouthelper.service.WorkOutLogService;
+import com.portal2moon.workouthelper.service.WorkOutService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -16,78 +16,54 @@ import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(WorkOutLogController.class)
 class WorkOutLogControllerTest {
     @Autowired
     MockMvc mvc;
-    @MockBean
-    private WorkOutLogService workOutLogService;
-
     @Autowired
     ObjectMapper objectMapper;
+    @MockBean
+    WorkOutService workOutService;
 
-    public WorkOutLog getWorkLogForTest(){
-        return WorkOutLog.builder()
-                .workoutId(null)
-                .user(new User(null, "susan"))
-                .workout(WorkOut.BARBELL_ROW)
-                .weight(50).reps(10).set(5)
+    public List<WorkOutLog> getWorkLogForTest(){
+        List<WorkOutLog> logs = new ArrayList<>();
+        for(int i=10; i>5; i--){
+            logs.add(
+                    WorkOutLog.builder()
+                            .workout(WorkOut.BARBELL_ROW)
+                            .weight(1).reps(i).sets(1).logId(null).volume(null)
+                            .build()
+            );
+        }
+        return logs;
+    }
+
+    public DailyWorkOutLog getDailyLogForTest(){
+        DailyWorkOutLog dlog = DailyWorkOutLog.builder()
+                .user(User.builder().alias("Susan").userId(null).build())
+                .dlogID(null).totalVolume(null)
                 .build();
+        dlog.getSingleLogs().addAll(getWorkLogForTest());
+        return dlog;
     }
 
     @Test
-    public void postSingleWorkLog() throws Exception {
-        mvc.perform(post("/workout").contentType(MediaType.APPLICATION_JSON).content("{\n" +
-                "    \"workoutId\": null,\n" +
-                "    \"user\": {\n" +
-                "        \"userId\": null,\n" +
-                "        \"alias\": \"meison\"\n" +
-                "    },\n" +
-                "    \"date\": null,\n" +
-                "    \"workout\": \"SQUAT\",\n" +
-                "    \"weight\": 100,\n" +
-                "    \"reps\": 3,\n" +
-                "    \"set\": 4,\n" +
-                "    \"volume\": null\n" +
-                "}")).andExpect(status().isOk());
-        Mockito.verify(workOutLogService).checkVolumeAndSave(any(WorkOutLog.class));
-    }
-
-    @Test
-    public void getWorkLogsOfDay() throws Exception {
-        List<WorkOutLog> workOutLogList = Collections.singletonList(getWorkLogForTest());
-        //bdd assumption
-        given(workOutLogService.getWorkOutLogsWithDate(anyString(), anyString())).willReturn(workOutLogList);
-        //mvc
-        MockHttpServletResponse response = mvc.perform(get("/workout/susan/2020-10-17"))
+    public void postTest() throws Exception {
+        MockHttpServletResponse response = mvc.perform(
+                MockMvcRequestBuilders.post("/workout")
+                .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(getDailyLogForTest())))
                 .andReturn().getResponse();
-        //validate
         assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        Mockito.verify(workOutLogService).getWorkOutLogsWithDate("susan", "2020-10-17");
-//        assertThat(response.getContentAsString()).isEqualTo(objectMapper.writeValueAsString(workOutLogList));
-    }
-
-    @Test
-    public void getVolumesWithDate() throws Exception {
-        MockHttpServletResponse response = mvc.perform(get("/workout/statistics/susan"))
-                .andReturn().getResponse();
-//        given(workOutLogService.getVolumes(anyString())).willReturn();
-        assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-        verify(workOutLogService).getVolumes("susan");
-
-
     }
 }

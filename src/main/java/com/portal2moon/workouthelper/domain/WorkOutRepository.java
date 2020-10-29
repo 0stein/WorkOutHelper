@@ -8,10 +8,11 @@ import java.util.List;
 import java.util.Map;
 
 public interface WorkOutRepository extends CrudRepository<WorkOutLog, Long> {
-    List<WorkOutLog> findAllByUser_Alias(String alias);
-    List<WorkOutLog> findAllByUser_AliasAndDate(String alias, Date date);
+//    List<WorkOutLog> findAllByUser_Alias(String alias);
+//    List<WorkOutLog> findAllByUser_AliasAndDate(String alias, Date date);
+//    @Query("SELECT w.date as date, SUM(w.volume) as volume " +
+//            "FROM WorkOutLog AS w WHERE w.user.alias =:alias GROUP BY w.date")
+//    List<DateAndVolumeProjection> getVolumeWithDateByAlias(String alias);
 
-    @Query("SELECT w.date as date, SUM(w.volume) as volume " +
-            "FROM WorkOutLog AS w WHERE w.user.alias =:alias GROUP BY w.date")
-    List<DateAndVolumeProjection> getVolumeWithDateByAlias(String alias);
+
 }
