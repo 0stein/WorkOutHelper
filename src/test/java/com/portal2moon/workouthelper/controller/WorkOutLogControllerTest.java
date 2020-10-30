@@ -23,7 +23,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 
 @ExtendWith(SpringExtension.class)
 @WebMvcTest(WorkOutLogController.class)
@@ -41,7 +40,7 @@ class WorkOutLogControllerTest {
             logs.add(
                     WorkOutLog.builder()
                             .workout(WorkOut.BARBELL_ROW)
-                            .weight(1).reps(i).sets(1).logId(null).volume(null)
+                            .weight(1).reps(i).sets(1).Id(null).volume(null)
                             .build()
             );
         }
@@ -50,8 +49,8 @@ class WorkOutLogControllerTest {
 
     public DailyWorkOutLog getDailyLogForTest(){
         DailyWorkOutLog dlog = DailyWorkOutLog.builder()
-                .user(User.builder().alias("Susan").userId(null).build())
-                .dlogID(null).totalVolume(null)
+                .user(User.builder().alias("Susan").Id(null).build())
+                .Id(null).totalVolume(null)
                 .build();
         dlog.getSingleLogs().addAll(getWorkLogForTest());
         return dlog;

@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface WorkOutService {
 
-    DailyWorkOutLog postDailyWorkOutLog(DailyWorkOutLog dailyWorkOutLog);
+    DailyWorkOutLog postLog(List<WorkOutLog> logs);
 
     Double checkVolume(List<WorkOutLog> logs);
 }

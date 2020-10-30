@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Service
@@ -20,13 +21,17 @@ public class WorkOutServiceImpl implements WorkOutService{
         this.userRepository = userRepository;
     }
     @Override
-    public DailyWorkOutLog postDailyWorkOutLog(DailyWorkOutLog dailyWorkOutLog){
-        Double totalVolume = checkVolume(dailyWorkOutLog.getSingleLogs());
-        DailyWorkOutLog copiedLog = DailyWorkOutLog.builder()
-                .user(dailyWorkOutLog.getUser()).totalVolume(totalVolume).dlogID(null)
+    public DailyWorkOutLog postLog(List<WorkOutLog> logs){
+        Double totalVolume = checkVolume(logs);
+        DailyWorkOutLog DailyLog = logs.get(0).getDailyWorkOutLog();
+        Optional<User> user = userRepository.findByAlias(DailyLog.getUser().getAlias());
+        DailyWorkOutLog.builder()
+                .user(user.orElseGet(DailyLog::getUser))
+                .totalVolume(totalVolume)
+                .Id(DailyLog.getId()).logName(DailyLog.getLogName())
                 .build();
-        dailyWorkOutLogRepository.save(copiedLog);
-        return copiedLog;
+        dailyWorkOutLogRepository.save(DailyLog);
+        return DailyLog;
     }
 
     @Override
@@ -37,7 +42,7 @@ public class WorkOutServiceImpl implements WorkOutService{
             totalVolume.updateAndGet(v -> v + volume);
             WorkOutLog copiedLog = WorkOutLog.builder()
                     .volume(volume).weight(log.getWeight()).sets(log.getSets()).reps(log.getReps())
-                    .workout(log.getWorkout()).logId(null)
+                    .workout(log.getWorkout()).Id(log.getId()).dailyWorkOutLog(log.getDailyWorkOutLog())
                     .build();
             workOutRepository.save(copiedLog);
         });

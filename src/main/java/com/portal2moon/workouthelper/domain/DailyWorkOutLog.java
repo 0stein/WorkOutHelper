@@ -18,13 +18,13 @@ import java.util.List;
 public class DailyWorkOutLog {
     @Id
     @GeneratedValue
-    private final Long dlogID;
+    private final Long Id;
 
     @ManyToOne
     @Cascade(org.hibernate.annotations.CascadeType.PERSIST)
     private final User user;
 
-    @OneToMany
+    @OneToMany(mappedBy = "dailyWorkOutLog")
     private final List<WorkOutLog> singleLogs = new ArrayList<WorkOutLog>();
 
     @JsonFormat(pattern="yyyy-MM-dd")
@@ -36,7 +36,7 @@ public class DailyWorkOutLog {
     public DailyWorkOutLog() {
         this.logName = null;
         this.totalVolume = null;
-        this.dlogID = null;
+        this.Id = null;
         this.user = null;
     }
 

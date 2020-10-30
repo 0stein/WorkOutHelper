@@ -15,11 +15,11 @@ import javax.persistence.Id;
 public class User {
     @Id
     @GeneratedValue
-    private final Long userId;
+    private final Long Id;
     private final String alias;
 
     public User() {
-        userId = null;
+        Id = null;
         alias = null;
     }
 }

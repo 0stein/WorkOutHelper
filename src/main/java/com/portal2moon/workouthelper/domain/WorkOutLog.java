@@ -1,6 +1,5 @@
 package com.portal2moon.workouthelper.domain;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CascadeType;
@@ -9,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import java.sql.Date;
 
 @RequiredArgsConstructor
 @Getter
@@ -21,7 +19,10 @@ public final class WorkOutLog {
 
     @Id
     @GeneratedValue
-    private final Long logId;
+    private final Long Id;
+
+    @ManyToOne
+    private final DailyWorkOutLog dailyWorkOutLog;
 
     private final WorkOut workout;
     private final double weight;
@@ -30,7 +31,8 @@ public final class WorkOutLog {
     private final Double volume;
 
     public WorkOutLog(){
-        logId = null;
+        dailyWorkOutLog = null;
+        Id = null;
         workout = null;
         weight = 0;
         reps = 0;
